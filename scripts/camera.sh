@@ -19,4 +19,4 @@ else
     EXTRA_PARAMS="-n"
 fi
 echo $filter
-/home/pi/spyglass/run.py -r 2304x1296 -f 50 -af manual -l 0 -tf /usr/share/libcamera/ipa/rpi/vc4/$filter $EXTRA_PARAMS
+/home/pi/spyglass/run.py -r 1920x1080 -f 50 -af manual -l 0 -tf /usr/share/libcamera/ipa/rpi/vc4/$filter $EXTRA_PARAMS

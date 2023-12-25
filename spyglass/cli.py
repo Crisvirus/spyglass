@@ -17,8 +17,8 @@ from spyglass.camera import init_camera
 from spyglass.server import StreamingOutput
 from spyglass.server import run_server
 
-MAX_WIDTH = 2304
-MAX_HEIGHT = 2304
+MAX_WIDTH = 1920
+MAX_HEIGHT = 1920
 
 
 def main(args=None):
