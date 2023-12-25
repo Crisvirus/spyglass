@@ -13,7 +13,8 @@ def init_camera(
         flip_horizontal=False,
         flip_vertical=False,
         tuning_filter=None,
-        tuning_filter_dir=None):
+        tuning_filter_dir=None,
+        night=False):
 
     tuning = None
 
@@ -29,7 +30,9 @@ def init_camera(
     if 'AfMode' in picam2.camera_controls:
         controls['AfMode'] = autofocus
         controls['AfSpeed'] = autofocus_speed
-        #controls['AnalogueGain'] = 20
+        if night:
+            controls['AnalogueGain'] = 20
+            controls['ExposureValue'] = 8
         if autofocus == libcamera.controls.AfModeEnum.Manual:
             controls['LensPosition'] = lens_position
     else:
@@ -38,7 +41,4 @@ def init_camera(
     transform = libcamera.Transform(hflip=int(flip_horizontal or upsidedown), vflip=int(flip_vertical or upsidedown))
 
     picam2.configure(picam2.create_video_configuration(main={'size': (width, height)}, controls=controls, transform=transform))
-    #picam2.brightness = 100
-    #picam2.exposure_mode = "night"
-    #picam2.set_controls({"AnalogueGain": 2.0})
     return picam2

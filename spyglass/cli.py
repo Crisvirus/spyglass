@@ -52,7 +52,8 @@ def main(args=None):
         parsed_args.flip_horizontal,
         parsed_args.flip_vertical,
         parsed_args.tuning_filter,
-        parsed_args.tuning_filter_dir)
+        parsed_args.tuning_filter_dir,
+        parsed_args.night)
 
     output = StreamingOutput()
     picam2.start_recording(MJPEGEncoder(), FileOutput(output))
@@ -162,6 +163,8 @@ def get_parser():
                         help='Set a tuning filter file name.')
     parser.add_argument('-tfd', '--tuning_filter_dir', type=str, default=None, nargs='?',const="",
                         help='Set the directory to look for tuning filters.')
+    parser.add_argument('-n', '--night', action='store_true',
+                        help='Set gain and exposure for night video')
     return parser
 
 # endregion cli args
