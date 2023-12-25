@@ -1,0 +1,15 @@
+[Unit]
+Description=Day/Night
+After=network.target
+Before=camera.service
+
+[Service]
+Type=oneshot
+Restart=always
+User=pi
+ExecStart=/home/pi/day.sh
+StandardError=journal
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

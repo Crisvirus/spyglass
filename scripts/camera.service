@@ -1,0 +1,15 @@
+[Unit]
+Description=Camera stream
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RuntimeMaxSec=1h
+User=pi
+ExecStart=/home/pi/camera.sh
+StandardError=journal
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
