@@ -5,7 +5,7 @@ Before=camera.service
 
 [Service]
 Type=oneshot
-Restart=always
+Restart=on-failure
 User=pi
 ExecStart=/home/pi/day.sh
 StandardError=journal
