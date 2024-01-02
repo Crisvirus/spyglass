@@ -3,7 +3,7 @@ Description=Day/Night detect
 
 [Timer]
 OnBootSec=0min
-OnUnitActiveSec=30min
+OnUnitActiveSec=10min
 
 [Install]
 WantedBy=timers.target

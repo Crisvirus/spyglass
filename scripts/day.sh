@@ -6,9 +6,14 @@ is_day()
     sunset=$(echo $full_sunrise | cut -d ' ' -f4)
     currenttime=$(date +%H:%M:%S)
     if [[ "$currenttime" > "$sunset" ]] || [[ "$currenttime" < "$sunrise" ]]; then
-        echo "night">/home/pi/day.txt
+        now="night"
     else
-        echo "day">/home/pi/day.txt
+        now="day"
+    fi
+    last=$(cat /home/pi/day.txt)
+    if [[ "$now" != "$last" ]]; then
+        echo "$now">/home/pi/day.txt
+        sudo systemctl restart camera.service
     fi
 }
 
