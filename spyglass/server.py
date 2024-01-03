@@ -32,6 +32,7 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
 
     class CameraControl(Thread):
         def __init__(self,picam):
+            Thread.__init__(self)
             self.picam = picam
         
         def run(self):
