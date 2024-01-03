@@ -11,6 +11,7 @@ from picamera2.outputs import FileOutput
 from . import logger
 import time
 import datetime
+import pytz
 from suntime import Sun, SunTimeException
 latitude = 52.09
 longitude = 5.12
@@ -46,7 +47,7 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
             while True:
                 today_sr = self.sun.get_sunrise_time()
                 today_ss = self.sun.get_sunset_time()
-                now = datetime.datetime.now()
+                now = datetime.datetime.now(pytz.utc)
                 print(today_sr)
                 print(now)
                 print(today_ss)
