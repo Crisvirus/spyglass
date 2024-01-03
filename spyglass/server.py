@@ -34,17 +34,20 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 
 def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot_url='/snapshot', orientation_exif=0):
     exif_header = create_exif_header(orientation_exif)
-
+    is_stopped = False
     class CameraControl(Thread):
-        def __init__(self,picam):
+        def __init__(self,picam, is_stopped):
             Thread.__init__(self)
             self.picam = picam
             self.sun = Sun(latitude, longitude)
+            self.is_stopped = is_stopped
         
         def run(self):
             last_state = "day"
             controls = {}
             while True:
+                if is_stopped:
+                    break
                 today_sr = self.sun.get_sunrise_time()
                 today_ss = self.sun.get_sunset_time()
                 now = datetime.datetime.now(pytz.utc)
@@ -62,7 +65,7 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
                 if state != last_state:
                     last_state = state
                     self.picam.set_controls(controls)
-                time.sleep(60*10)
+                time.sleep(60*2)
             
 
 
@@ -135,8 +138,9 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
     logger.info('Streaming endpoint: %s', stream_url)
     logger.info('Snapshot endpoint: %s', snapshot_url)
     address = (bind_address, port)
-    camera_control = CameraControl(picam)
+    camera_control = CameraControl(picam,is_stopped)
     camera_control.start()
     current_server = StreamingServer(address, StreamingHandler)
     current_server.serve_forever()
+    is_stopped = True
     camera_control.join()
