@@ -10,7 +10,10 @@ from picamera2.encoders import MJPEGEncoder
 from picamera2.outputs import FileOutput
 from . import logger
 import time
-
+import datetime
+from suntime import Sun, SunTimeException
+latitude = 52.09
+longitude = 5.12
 
 class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
@@ -35,10 +38,31 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
         def __init__(self,picam):
             Thread.__init__(self)
             self.picam = picam
+            self.sun = Sun(latitude, longitude)
         
         def run(self):
-            time.sleep(30)
-            self.picam.set_controls({"ExposureValue": 8, "AnalogueGain": 20})
+            last_state = "day"
+            controls = {}
+            while True:
+                today_sr = self.sun.get_sunrise_time()
+                today_ss = self.sun.get_sunset_time()
+                now = datetime.datetime.now()
+                print(today_sr)
+                print(now)
+                print(today_ss)
+                if now < today_sr and now > today_ss:
+                    print("Night")
+                    state = "night"
+                    controls = {"ExposureValue": 8, "AnalogueGain": 20}
+                else:
+                    print("Day")
+                    state = "day"
+                    controls = {"ExposureValue": 0, "AnalogueGain": 1}
+                if state != last_state:
+                    last_state = state
+                    self.picam.set_controls(controls)
+                time.sleep(60*10)
+            
 
 
     class StreamingHandler(server.BaseHTTPRequestHandler):
