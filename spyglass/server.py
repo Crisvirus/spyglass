@@ -52,7 +52,7 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
                 print(today_sr)
                 print(now)
                 print(today_ss)
-                if now < today_sr and now > today_ss:
+                if now < today_sr or now > today_ss:
                     print("Night")
                     state = "night"
                     controls = {"ExposureValue": 8, "AnalogueGain": 20}
