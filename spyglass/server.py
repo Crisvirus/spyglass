@@ -9,6 +9,7 @@ import libcamera
 from picamera2.encoders import MJPEGEncoder
 from picamera2.outputs import FileOutput
 from . import logger
+import time
 
 
 class StreamingOutput(io.BufferedIOBase):
@@ -36,8 +37,8 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
             self.picam = picam
         
         def run(self):
-            print("Analogue Gain = " + str(self.picam.controls.AnalogueGain))
-            print("Exposure Value = " + str(self.picam.controls.ExposureValue))
+            time.sleep(30)
+            self.picam.set_controls({"ExposureValue": 8, "AnalogueGain": 20})
 
 
     class StreamingHandler(server.BaseHTTPRequestHandler):
