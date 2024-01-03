@@ -33,6 +33,9 @@ def init_camera(
         if night:
             controls['AnalogueGain'] = 20
             controls['ExposureValue'] = 8
+        else:
+            controls['AnalogueGain'] = 1
+            controls['ExposureValue'] = 0
         if autofocus == libcamera.controls.AfModeEnum.Manual:
             controls['LensPosition'] = lens_position
     else:
