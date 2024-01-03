@@ -59,7 +59,7 @@ def main(args=None):
     picam2.start_recording(MJPEGEncoder(), FileOutput(output))
 
     try:
-        run_server(bind_address, port, output, stream_url, snapshot_url, orientation_exif)
+        run_server(bind_address, port, output, stream_url, snapshot_url, orientation_exif, picam2)
     finally:
         picam2.stop_recording()
 

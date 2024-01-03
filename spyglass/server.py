@@ -2,9 +2,12 @@ import io
 import logging
 import socketserver
 from http import server
-from threading import Condition
+from threading import Condition, Thread
 from spyglass.url_parsing import check_urls_match
 from spyglass.exif import create_exif_header
+import libcamera
+from picamera2.encoders import MJPEGEncoder
+from picamera2.outputs import FileOutput
 from . import logger
 
 
@@ -24,8 +27,17 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
     daemon_threads = True
 
 
-def run_server(bind_address, port, output, stream_url='/stream', snapshot_url='/snapshot', orientation_exif=0):
+def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot_url='/snapshot', orientation_exif=0):
     exif_header = create_exif_header(orientation_exif)
+
+    class CameraControl(Thread):
+        def __init__(self,picam):
+            self.picam = picam
+        
+        def run(self):
+            print("Analogue Gain = " + str(self.picam.controls.AnalogueGain))
+            print("Exposure Value = " + str(self.picam.controls.ExposureValue))
+
 
     class StreamingHandler(server.BaseHTTPRequestHandler):
         def do_GET(self):
@@ -96,5 +108,8 @@ def run_server(bind_address, port, output, stream_url='/stream', snapshot_url='/
     logger.info('Streaming endpoint: %s', stream_url)
     logger.info('Snapshot endpoint: %s', snapshot_url)
     address = (bind_address, port)
+    camera_control = CameraControl(picam)
+    camera_control.start()
     current_server = StreamingServer(address, StreamingHandler)
     current_server.serve_forever()
+    camera_control.join()
