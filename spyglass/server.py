@@ -44,12 +44,10 @@ def run_server(bind_address, port, output, picam, stream_url='/stream', snapshot
             last_state = "day"
             controls = {}
             while True:
-                print(self.picam.start)
                 print(self.picam.started)
                 print(self.picam.is_open)
-                print(self.picam.stop)
-                if not self.picam.running:
-                    break
+                # if not self.picam.running:
+                #     break
                 today_sr = self.sun.get_sunrise_time()
                 today_ss = self.sun.get_sunset_time()
                 now = datetime.datetime.now(pytz.utc)
